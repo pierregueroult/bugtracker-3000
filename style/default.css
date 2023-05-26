@@ -1,0 +1,30 @@
+html,
+body {
+  overflow-x: hidden;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  overflow-y: hidden;
+}
+
+.message {
+  animation: notify 1s 2s ease-in-out forwards;
+}
+
+@keyframes notify {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
