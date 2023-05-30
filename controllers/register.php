@@ -60,20 +60,25 @@ if (strlen($_FILES['image']['name']) > 0 && $_FILES['image']['error'] === 0) {
 
   $newFileName = uniqid('', true) . '.' . $fileExtention;
 
-  move_uploaded_file($_FILES['image']['tmp_name'], '../src/images/pfp/' . $newFileName);
-
   $sql = "INSERT INTO sae203_users (firstnameUser, lastnameUser, mailUser, passwordUser, imageUser) VALUES (:firstname, :lastname, :mail, :passwordUser, :imageUser)";
 
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(
-    array(
-      'firstname' => htmlentities($firstname),
-      'lastname' => htmlentities($lastname),
-      'mail' => htmlentities($mail),
-      'passwordUser' => htmlentities($shaPassword),
-      'imageUser' => "/sae203/src/images/pfp/$newFileName"
-    )
-  );
+  try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(
+      array(
+        'firstname' => htmlentities($firstname),
+        'lastname' => htmlentities($lastname),
+        'mail' => htmlentities($mail),
+        'passwordUser' => htmlentities($shaPassword),
+        'imageUser' => "/sae203/src/images/pfp/$newFileName"
+      )
+    );
+  } catch (PDOException $e) {
+    header('Location: ../account/register.php?error=mailAlreadyUsed');
+    die();
+  }
+
+  move_uploaded_file($_FILES['image']['tmp_name'], '../src/images/pfp/' . $newFileName);
 
   // unlink($_FILES['image']['name']);
   // unlink($_FILES['image']['tmp_name']);
@@ -85,15 +90,20 @@ if (strlen($_FILES['image']['name']) > 0 && $_FILES['image']['error'] === 0) {
 } else {
   $sql = "INSERT INTO sae203_users (firstnameUser, lastnameUser, mailUser, passwordUser) VALUES (:firstname, :lastname, :mail, :passwordUser)";
 
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(
-    array(
-      'firstname' => htmlentities($firstname),
-      'lastname' => htmlentities($lastname),
-      'mail' => htmlentities($mail),
-      'passwordUser' => $shaPassword
-    )
-  );
+  try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(
+      array(
+        'firstname' => htmlentities($firstname),
+        'lastname' => htmlentities($lastname),
+        'mail' => htmlentities($mail),
+        'passwordUser' => $shaPassword
+      )
+    );
+  } catch (PDOException $e) {
+    header('Location: ../account/register.php?error=mailAlreadyUsed');
+    die();
+  }
 
   header('Location: ../account/login.php?success=accountCreated');
 

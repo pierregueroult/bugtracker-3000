@@ -182,6 +182,54 @@ if ($result['devId'] != null) {
           </div>
         </section>
 
+    <?php } else if ($role === "dev") { ?>
+          <section>
+            <form action="../controllers/modifyTicket.php" class="flex flex-col gap-8 justify-center items-center mt-32"
+              method="POST">
+              <input type="text"
+                class="text-3xl font-bold text-indigo-900 text-center w-1/2 border-dashed border-2 border-gray-400"
+                name="title" id="title" value="<?= $result['titleTicket'] ?>" required />
+              <input type="hidden" required name="id" id="id" value="<?= $result['idTicket'] ?>" class="hidden" />
+              <textarea class="text-xl text-black w-1/2 resize-none border-dashed border-2 border-gray-400" rows="10"
+                name="description" id="description" cols="80" required spellcheck="true"
+                maxlength="500"><?= $result['descriptionTicket'] ?></textarea>
+              <div class="w-1/2 flex flex-row justify-center items-center rounded-lg p-4 
+          <?= $result['statusTicket'] === 'waiting' ? "bg-red-700" : "" ?>
+          <?= $result['statusTicket'] === 'assigned' ? "bg-green-700" : "" ?>
+          <?= $result['statusTicket'] === 'closed' ? "bg-gray-700" : "" ?>">
+                <p class="text-xl text-white font-bold">
+                <?php
+                if ($result['statusTicket'] == "waiting") {
+                  echo "Ce ticket est en attente de traitement";
+                } else if ($result['statusTicket'] == "assigned") {
+                  echo "Ce ticket est en cours de traitement";
+                } else if ($result['statusTicket'] == "closed") {
+                  echo "Ce ticket a été traité. Il est à présent fermé.";
+                }
+                ?>
+                </p>
+              </div>
+              <div class="w-1/2 flex flex-row justify-between items-center">
+                <a href="./"
+                  class="bg-indigo-900 text-white rounded-lg p-4 hover:bg-indigo-700 transition-all duration-200 text-xl mb-4">
+                  Retourner à la liste des tickets
+                </a>
+                <button type="submit"
+                  class="bg-indigo-900 text-white rounded-lg p-4 hover:bg-indigo-700 transition-all duration-200 text-xl mb-4">
+                  Mettre à jour le ticket
+                </button>
+              </div>
+            </form>
+            <div class="flex justify-end items-center w-1/2 relative left-1/4">
+              <form action="../controllers/closeTicket" method="POST">
+                <input type="hidden" name="id" id="id" value="<?= $result['idTicket'] ?>" class="hidden" />
+                <button type="submit"
+                  class="bg-indigo-900 text-white rounded-lg p-4 hover:bg-indigo-700 transition-all duration-200 text-xl mb-32">
+                  Fermer le ticket
+                </button>
+              </form>
+            </div>
+          </section>
     <?php } ?>
   </main>
   <?php include('../components/footer.php'); ?>

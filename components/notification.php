@@ -13,7 +13,7 @@
     'wrongForm' => 'Formulaire incorrect',
     'notLogged' => 'Vous devez être connecté pour accéder à cette page',
     'notAllowed' => 'Vous n\'avez pas les droits pour accéder à cette page',
-
+    "mailAlreadyUsed" => "Cette adresse mail est déjà utilisée",
   );
 
   $sucessList = array(
