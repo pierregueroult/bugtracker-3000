@@ -30,13 +30,18 @@ include('../database/connection.php');
 $sql = "INSERT INTO sae203_tickets (titleTicket, descriptionTicket, tagTicket, userId) VALUES (:title, :description, :tag, :userId)";
 
 // we execute the sql command
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-  'title' => htmlentities($title),
-  'description' => htmlentities($description),
-  'tag' => htmlentities($tag),
-  'userId' => intval(htmlentities($userId))
-]);
+try {
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute([
+    'title' => htmlentities($title),
+    'description' => htmlentities($description),
+    'tag' => htmlentities($tag),
+    'userId' => intval(htmlentities($userId))
+  ]);
+} catch (PDOException $e) {
+  header('Location: ../tickets/create.php?error=sqlError');
+  die();
+}
 
 // we redirect to the tickets page
 header('Location: ../tickets/index.php?success=ticketCreated');

@@ -172,7 +172,7 @@ if ($result['devId'] != null) {
             </div>
           </form>
           <div class="flex justify-end items-center w-1/2 relative left-1/4">
-            <form action="../controllers/closeTicket" method="POST">
+            <form action="../controllers/closeTicket.php" method="POST">
               <input type="hidden" name="id" id="id" value="<?= $result['idTicket'] ?>" class="hidden" />
               <button type="submit"
                 class="bg-indigo-900 text-white rounded-lg p-4 hover:bg-indigo-700 transition-all duration-200 text-xl mb-32">

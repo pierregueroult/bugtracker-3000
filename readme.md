@@ -66,6 +66,7 @@ Coded with ❤️ by [Pierre Guéroult](https://pierregueroult.dev)
 
 - Login : maddycarter@mail.com
 - Password : 2010
+
 - Login : bob@mail.com
 - Password : bobby
 

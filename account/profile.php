@@ -31,7 +31,7 @@ if (!isset($_SESSION['user'])) {
         <div class="flex flex-row items-center justify-between w-full">
           <div class="w-1/3">
             <img
-              src="<?= $_SESSION['user']['imageUser'] !== "" ? $_SESSION['user']['imageUser'] : "../src/images/pfp/default.jpg" ?>"
+              src="<?= $_SESSION['user']['imageUser'] !== null ? $_SESSION['user']['imageUser'] : "../src/images/pfp/default.jpg" ?>"
               alt="avatar" class="rounded-full w-32 h-32 bg-indigo-900">
           </div>
           <div class="w-2/3">

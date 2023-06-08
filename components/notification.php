@@ -20,6 +20,7 @@ if (isset($_GET['error']) || isset($_GET['success'])) {
     'notLogged' => 'Vous devez être connecté pour accéder à cette page',
     'notAllowed' => 'Vous n\'avez pas les droits pour accéder à cette page',
     "mailAlreadyUsed" => "Cette adresse mail est déjà utilisée",
+    "sqlError" => "Erreur SQL"
   );
 
   $sucessList = array(

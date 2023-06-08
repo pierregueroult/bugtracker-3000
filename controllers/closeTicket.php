@@ -7,17 +7,17 @@ session_start();
 
 // if the user is not connected or if he is a user, redirect to login page
 if (!isset($_SESSION['user'])) {
-  header('Location: ../account/login.php?error=notConnected');
+  header('Location: /sae203/account/login.php?error=notConnected');
   die();
 }
 $role = $_SESSION['user']['roleUser'];
 if ($role == 'user') {
-  header('Location: ../tickets/index.php?error=notAllowed');
+  header('Location: /sae203/tickets/index.php?error=notAllowed');
 }
 
 // if the parameter is not set, redirect to tickets page
 if (!isset($_POST['id'])) {
-  header('Location: ../tickets/index.php?error=notFound');
+  header('Location: /sae203/tickets/index.php?error=notFound');
   die();
 }
 
@@ -27,22 +27,28 @@ include('../database/connection.php');
 // sql command to get the ticket
 $sql = "SELECT * FROM sae203_tickets INNER JOIN sae203_users ON sae203_tickets.devId = sae203_users.idUser WHERE sae203_tickets.idTicket = :id";
 
-// we execute the sql command
-$stmt = $pdo->prepare($sql);
-$stmt->execute(array('id' => htmlentities($_POST['id'])));
+try {
+  // we execute the sql command
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(array('id' => htmlentities($_POST['id'])));
 
-// we get the result
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
+  // we get the result
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo $e->getMessage();
+  header('Location: /sae203/tickets/index.php?error=sqlError');
+  die();
+}
 
 // if the ticket is not found, redirect to tickets page
 if (!$result) {
-  header('Location: ../tickets/index.php?error=notFound');
+  header('Location: /sae203/tickets/index.php?error=notFound');
   die();
 }
 
 // if the user is not the dev of the ticket and is not an admin, redirect to tickets page
 if ($_SESSION['user']['idUser'] !== $result['devId'] && $_SESSION['user']['roleUser'] !== 'admin') {
-  header('Location: ../tickets/index.php?error=notAllowed');
+  header('Location: /sae203/tickets/index.php?error=notAllowed');
   die();
 }
 
@@ -50,11 +56,17 @@ if ($_SESSION['user']['idUser'] !== $result['devId'] && $_SESSION['user']['roleU
 $sql = "UPDATE sae203_tickets SET statusTicket = 'closed', closedAt = NOW() WHERE idTicket = :id";
 
 // we execute the sql command
-$stmt = $pdo->prepare($sql);
-$id = htmlentities($_POST['id']);
-$stmt->execute(array('id' => $id));
+try {
+  $stmt = $pdo->prepare($sql);
+  $id = htmlentities($_POST['id']);
+  $stmt->execute(array('id' => $id));
+} catch (PDOException $e) {
+  echo $e->getMessage();
+  header('Location: /sae203/tickets/index.php?error=sqlError');
+  die();
+}
 
 // we redirect to the tickets page
-header('Location: ../tickets/index.php?success=closed');
+header('Location: /sae203/tickets/index.php?success=closed');
 
 ?>

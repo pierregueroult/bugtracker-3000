@@ -32,14 +32,19 @@ include('../database/connection.php');
 $sql = "UPDATE sae203_tickets SET devId = :devId, statusTicket = 'assigned', assignedAt = NOW(), scaleTicket = :scaleTicket WHERE idTicket = :ticketId";
 
 // we execute the sql command
-$stmt = $pdo->prepare($sql);
-$stmt->execute(
-  array(
-    'devId' => htmlentities($_POST['dev']),
-    'scaleTicket' => htmlentities($_POST['scale']),
-    'ticketId' => htmlentities($_POST['ticketId'])
-  )
-);
+try {
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(
+    array(
+      'devId' => htmlentities($_POST['dev']),
+      'scaleTicket' => htmlentities($_POST['scale']),
+      'ticketId' => htmlentities($_POST['ticketId'])
+    )
+  );
+} catch (PDOException $e) {
+  header('Location: ../tickets/index.php?error=sqlError');
+  die();
+}
 
 // we redirect to the tickets page
 header('Location: ../tickets/index.php?success=ticketAssigned');
