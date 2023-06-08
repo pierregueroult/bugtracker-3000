@@ -1,3 +1,11 @@
+<?php
+// this component is used to display a ticket in the admin page
+// a ticket value has to be declared before including this component
+// the ticket value is an array containing the ticket data from the database
+// the ticket value is an associative array with the following keys:
+// idTicket, titleTicket, descriptionTicket, tagTicket, statusTicket, createdAt, closedAt, assignedAt, scaleTicket, userId, devId, firstnameUser, lastnameUser, mailUser, roleUser
+?>
+
 <tr class="w-full">
   <td class="text-xl font-bold text-indigo-900 hover:text-indigo-700 p-4">
     <a href="./ticket.php?id=<?= $ticket['idTicket'] ?>"><?= $ticket['titleTicket'] ?></a>
@@ -24,6 +32,7 @@
   <td class="text-lg text-indigo-900 px-4">
     <?php
 
+
     if ($ticket['statusTicket'] == 'assigned') {
       echo "En cours - Priorité : " . ($ticket['scaleTicket'] == 0 ? "Non défini" : $ticket['scaleTicket'] . "/5");
     } else if ($ticket['statusTicket'] == 'closed') {
@@ -32,8 +41,11 @@
 
     if ($ticket['statusTicket'] == 'waiting') {
 
+      // if the ticket is waiting, we display the button to assign the ticket
+    
+      // sql command to get the devs list from the database (only the id, firstname and lastname)
       $sql = "SELECT idUser, firstnameUser, lastnameUser FROM sae203_users WHERE roleUser = 'dev'";
-
+      // we execute the sql command
       $stmt = $pdo->prepare($sql);
       $stmt->execute();
 
@@ -48,6 +60,8 @@
           </option>
           <?php
 
+          // for each dev, we display an option in the select tag of the form
+        
           foreach ($devs as $dev) {
             ?>
             <option value="<?= $dev['idUser'] ?>">

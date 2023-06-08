@@ -1,3 +1,11 @@
+<?php
+// this component is used to display the tickets for a user
+// a ticket value has to be declared before including this component
+// the ticket value is an array containing the ticket data from the database
+// the ticket value is an associative array with the following keys:
+// idTicket, titleTicket, descriptionTicket, tagTicket, statusTicket, createdAt, closedAt, assignedAt, scaleTicket, userId, devId, firstnameUser, lastnameUser, mailUser, roleUser
+?>
+
 <tr class="w-full">
   <td class="text-xl font-bold text-black hover:text-indigo-700 p-4">
     <a href="./ticket.php?id=<?= $ticket['idTicket'] ?>"><?= $ticket['titleTicket'] ?></a>

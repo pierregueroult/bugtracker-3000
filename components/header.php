@@ -1,7 +1,16 @@
 <?php
 
+// header component used in all pages
+
+// the header adapts to the user role and displays the appropriate links and buttons
+
+// if the session is started and the user is connected, we set the variable to true else to false
 $isConnected = isset($_SESSION['user']) ? true : false;
 
+// if the user is connected, we get his role
+if ($isConnected === true) {
+  $role = $_SESSION['user']['roleUser'];
+}
 ?>
 
 <header class="w-screen h-24 bg-indigo-900 flex flex-row justify-between items-center">
@@ -13,7 +22,7 @@ $isConnected = isset($_SESSION['user']) ? true : false;
     <div class="flex flex-row justify-between items-center mr-10">
       <a href="/sae203/account/logout.php" class="text-white font-bold text-xl mr-5">Déconnexion</a>
       <?php
-      if ($_SESSION['user']['roleUser'] === 'user') {
+      if ($role === 'user') {
         ?>
         <a href="/sae203/tickets/create.php" class="text-white font-bold text-xl mr-5">Créer un ticket</a>
         <?php
@@ -21,9 +30,9 @@ $isConnected = isset($_SESSION['user']) ? true : false;
       ?>
       <a href="/sae203/tickets/index.php" class="text-white font-bold text-xl mr-5">
         <?php
-        if ($_SESSION['user']['roleUser'] === 'user') {
+        if ($role === 'user') {
           echo "Mes tickets";
-        } else if ($_SESSION['user']['roleUser'] === 'dev') {
+        } else if ($role === 'dev') {
           echo "Tickets assignés";
         } else {
           echo "Tous les tickets";

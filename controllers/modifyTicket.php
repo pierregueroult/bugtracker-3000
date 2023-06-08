@@ -1,47 +1,63 @@
 <?php
 
+// this file is used to modify a ticket
+// taking the ticket id, the title and the description as parameters
+
 session_start();
 
+// if the user is not connected, redirect to login page
 if (!isset($_SESSION['user'])) {
   header('Location: ../account/login.php?error=notConnected');
   die();
 }
 
+// if the parameters are not set, redirect to tickets page
 if (!isset($_POST['id'])) {
   header('Location: ../tickets/index.php?error=notFound');
   die();
 }
 
+// we take the user role
 $role = $_SESSION['user']['roleUser'];
 
+// if the user is not an admin or a dev, redirect to tickets page
 if ($role == 'user') {
   header('Location: ../tickets/index.php?error=notAllowed');
 }
 
+// we initialize the database connection
 include('../database/connection.php');
 
+// sql command to get the ticket
 $sql = "SELECT * FROM sae203_tickets WHERE idTicket = :id";
 
+// we execute the sql command
 $stmt = $pdo->prepare($sql);
 $stmt->execute(array('id' => htmlentities($_POST['id'])));
-
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// if the ticket is not found, redirect to tickets page
 if (!$result) {
   header('Location: ../tickets/index.php?error=notFound');
   die();
 }
 
+// we take the data from the form
 $id = htmlentities($_POST['id']);
-$title = htmlentities($_POST['title']);
 $description = htmlentities($_POST['description']);
 
-if (isset($_POST['devId'], $_POST['scale'])) {
+// if devId form data and the scale form are set, we take it
+if (isset($_POST['devId'], $_POST['scale'], $_POST['title'])) {
+
+  // we take more the data from the form
   $devId = htmlentities($_POST['devId']);
   $scale = htmlentities($_POST['scale']);
+  $title = htmlentities($_POST['title']);
 
+  // sql command to update the ticket
   $sql = "UPDATE sae203_tickets SET titleTicket = :title, descriptionTicket = :description, devId = :devId, scaleTicket = :scale, statusTicket = :status, assignedAt = NOW() WHERE idTicket = :id";
 
+  // we prepare the array to execute the sql command
   $prepareArray = array(
     'title' => $title,
     'description' => $description,
@@ -51,19 +67,21 @@ if (isset($_POST['devId'], $_POST['scale'])) {
     'id' => $id
   );
 } else {
-  $sql = "UPDATE sae203_tickets SET titleTicket = :title, descriptionTicket = :description WHERE idTicket = :id";
+  // sql command to update the ticket in the other case (without devId and scale)
+  $sql = "UPDATE sae203_tickets SET descriptionTicket = CONCAT_WS('<br/>', descriptionTicket, :description) WHERE idTicket = :id";
 
+  // we prepare the array to execute the sql command
   $prepareArray = array(
-    'title' => $title,
     'description' => $description,
     'id' => $id
   );
 }
 
+// we execute the sql command
 $stmt = $pdo->prepare($sql);
 $stmt->execute($prepareArray);
 
+// we redirect to the ticket page with a success message in the url parameters
 header('Location: ../tickets/ticket?id=' . $id . '&success=ticketModified');
-
 
 ?>

@@ -1,5 +1,11 @@
-<?php if (isset($_GET['error']) || isset($_GET['success'])) {
+<?php
+// this component is used in every page to display notifications
 
+// we check if there is an error or a success in the url
+
+if (isset($_GET['error']) || isset($_GET['success'])) {
+
+  // we create the lists of errors and success messages
   $errorList = array(
     'wrongCredentials' => 'Identifiants incorrects',
     'notConnected' => 'Vous devez être connecté pour accéder à cette page',
@@ -24,6 +30,8 @@
     'ticketModified' => 'Le ticket a bien été modifié',
   );
 
+
+  // we adapt the notification to the error or the success (color and message)
 
   ?>
   <aside

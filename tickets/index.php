@@ -15,10 +15,15 @@ $role = $_SESSION['user']['roleUser'];
 include('../database/connection.php');
 
 if ($role === "user") {
+
   $sql = "SELECT * FROM sae203_tickets WHERE userId = :identifiant";
+
 } else if ($role === "dev") {
+
   $sql = "SELECT * FROM sae203_tickets WHERE devId = :identifiant && statusTicket != 'closed'";
+
 } else {
+
   $sql = "SELECT * FROM sae203_tickets LEFT JOIN sae203_users ON sae203_tickets.devId = sae203_users.idUser";
 }
 
@@ -126,7 +131,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th class="text-left px-4">Date</th>
             <th class="text-left px-4">Dernière mise à jour</th>
             <th class="text-left px-4">
-              <?= $_SESSION['user']['roleUser'] == 'dev' ? "Priorité" : "Status" ?>
+              <?= $role == 'dev' ? "Priorité" : "Status" ?>
             </th>
             <th class="text-left px-4">Tag</th>
           </tr>
